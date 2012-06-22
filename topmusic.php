@@ -8,6 +8,7 @@ $feed_doc->loadXML($feed);
 $item_index=0;
 $items=$feed_doc->getElementsByTagName("track");
 			$items_count=$items->length;
+$response = array();
 foreach($items as $item)
 	{
 		$title=$item->getElementsByTagName("name")->item(0)->childNodes->item(0)->nodeValue;
@@ -24,9 +25,16 @@ foreach($items as $item)
 			$thumb_url=$entry->getElementsByTagName("thumbnail")->item(0)->getAttribute("url");
 			$split_id=explode(':',$id_string);
 			$id=$split_id[3];
-			?>
-			<a class="vid-links" href="#" id="<?php echo $id ?>"><div class="vid-item"><img class="vid-thumb" src="<?php echo $thumb_url;?>"/><p class="vid-title"><?php echo $title ?></p><img class="play-icon play-icon-hidden" src="play.png"/></div></a>
-			<?php
+			$result_item = array('id' => $id, 'thumb_url' => $thumb_url, 'title' => $title);
+			array_push($response, $result_item);
+			
+			/*<a class="vid-links" href="#" id="<?php echo $id ?>"><div class="vid-item"><img class="vid-thumb" src="<?php echo $thumb_url;?>"/><p class="vid-title"><?php echo $title ?></p><img class="play-icon play-icon-hidden" src="play.png"/></div></a>*/
+	
 		}
+		
 	}
+$json = json_encode($response);
+header('Content-Type: application/json');
+echo $json;
+
 ?>
